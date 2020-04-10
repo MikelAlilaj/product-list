@@ -18,7 +18,7 @@
         @foreach($products as $product)
 
             <tr>
-                <td>{{$product->photo_id}}</td>
+                <td><img height="50" src="{{$product->photo ? $product->photo->file : 'http://placehold.it/400x400' }} " alt=""></td>
                 <td>{{$product->title}}</td>
                 <td>{{$product->body}}</td>
                 <td>{{$product->sasi_gjendje}}</td>

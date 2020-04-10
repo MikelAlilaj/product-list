@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Photo extends Model
 {
     //
+
     protected $uploads = '/images/';
 
 
@@ -27,4 +28,8 @@ class Photo extends Model
 
 
     }
+
+
+
+
 }

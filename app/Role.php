@@ -10,4 +10,10 @@ class Role extends Model
     protected $fillable=[
         'name'
     ];
+
+
+    public function roles()
+    {
+        return $this->belongsToMany(App\Role::class);
+    }
 }

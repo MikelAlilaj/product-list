@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 
 class AdminProductsController extends Controller
 {
+
+
     /**
      * Display a listing of the resource.
      *
@@ -30,10 +32,11 @@ class AdminProductsController extends Controller
     public function create()
     {
         //
+        $user=Auth::user();
+        if($user->isAdmin()) {
 
-
-
-        return view('admin.products.create');
+            return view('admin.products.create');
+        }
     }
 
     /**
@@ -49,6 +52,7 @@ class AdminProductsController extends Controller
         $user=Auth::user();
 
 
+
         if($file=$request->file('photo_id')){
 
 
@@ -56,13 +60,14 @@ class AdminProductsController extends Controller
             $file->move('images', $name);
             $photo = Photo::create(['file' => $name]);
             $input['photo_id'] = $photo->id;
+             }
 
+        $user->Products()->create($input);
+        return redirect('/admin/products');
     }
-    $user->Products()->create($input);
-    return redirect('/admin/products');
 
 
-    }
+
 
     /**
      * Display the specified resource.
@@ -84,6 +89,15 @@ class AdminProductsController extends Controller
     public function edit($id)
     {
         //
+        $user=Auth::user();
+        if($user->isAdmin()) {
+
+
+            $product = Product::findOrFail($id);
+
+
+            return view('admin.products.edit', compact('product'));
+        }
     }
 
     /**
@@ -96,6 +110,26 @@ class AdminProductsController extends Controller
     public function update(Request $request, $id)
     {
         //
+
+
+        $input=$request->all();
+
+        if($file=$request->file('photo_id')){
+
+
+        $name = time() . $file->getClientOriginalName();
+
+        $file->move('images', $name);
+
+        $photo = Photo::create(['file' => $name]);
+
+        $input['photo_id'] = $photo->id;
+
+    }
+
+        Auth::user()->products()->whereId($id)->first()->update($input);
+
+        return redirect('/admin/products');
     }
 
     /**
@@ -107,5 +141,12 @@ class AdminProductsController extends Controller
     public function destroy($id)
     {
         //
+        $product=product::findOrFail($id);
+
+        unlink(public_path() . $product->photo->file);
+
+        $product->delete();
+
+        return redirect('/admin/products');
     }
 }

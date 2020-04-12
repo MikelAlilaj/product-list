@@ -25,11 +25,11 @@ class ProductsCreateRequest extends FormRequest
     {
         return [
             //
-            /*'photo_id'      =>'required',
+            'photo_id'      =>'required',
             'title'         =>'required',
             'body'          =>'required',
             'sasi_gjendje'  =>'required',
-            'sasi_kile'     =>'required'*/
+            'sasi_peshe'     =>'required'
         ];
     }
 }

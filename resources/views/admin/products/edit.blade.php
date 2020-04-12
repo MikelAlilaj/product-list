@@ -1,11 +1,27 @@
 
-<h1>Krijo Produktin</h1>
 
 
+
+<h1>Edit Produkt</h1>
 
 <div class="row">
-    {!! Form::open(['method'=>'POST', 'action'=> 'AdminProductsController@store',  'files'=>true ]) !!}
 
+    <div class="col-sm-3">
+
+
+        <img src="{{$product->photo->file}}" alt="" class="img-responsive">
+
+
+    </div>
+
+
+
+    <div class="col-sm-9">
+
+
+
+
+    {!! Form::model($product, ['method'=>'PATCH', 'action'=>[ 'AdminProductsController@update', $product->id], 'files'=>true ]) !!}
 
 
 
@@ -40,19 +56,30 @@
 
 
     <div class="form-group">
-        {!! Form::submit('Krijo Produktin', ['class'=>'btn btn-primary'])!!}
+        {!! Form::submit('Update Post', ['class'=>'btn btn-primary'])!!}
     </div>
     {!! Form::close() !!}
 
-</div>
+
+        {!! Form::open(['method'=>'DELETE', 'action'=> ['AdminProductsController@destroy', $product->id]]) !!}
+
+        <div class="form-group">
+            {!! Form::submit('Delete Post', ['class'=>'btn btn-danger col-sm-6']) !!}
+        </div>
+        {!! Form::close() !!}
 
 
-<div class="row">
+      </div>
 
 
-    @include('includes.form_error')
+    </div>
+
+
+    <div class="row">
+
+
+        @include('includes.form_error')
 
 
 
-</div>
-
+    </div>

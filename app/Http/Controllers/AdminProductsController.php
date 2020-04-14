@@ -37,6 +37,8 @@ class AdminProductsController extends Controller
 
             return view('admin.products.create');
         }
+        return ('you can\'t create because you are USER.');
+
     }
 
     /**
@@ -60,7 +62,7 @@ class AdminProductsController extends Controller
             $file->move('images', $name);
             $photo = Photo::create(['file' => $name]);
             $input['photo_id'] = $photo->id;
-             }
+        }
 
         $user->Products()->create($input);
         return redirect('/admin/products');
@@ -98,6 +100,7 @@ class AdminProductsController extends Controller
 
             return view('admin.products.edit', compact('product'));
         }
+        return ('you can\'t edit because you are USER.');
     }
 
     /**
@@ -116,15 +119,15 @@ class AdminProductsController extends Controller
         if($file = $request->file('photo_id')){
 
 
-        $name = time() . $file->getClientOriginalName();
+            $name = time() . $file->getClientOriginalName();
 
-        $file->move('images', $name);
+            $file->move('images', $name);
 
-        $photo = Photo::create(['file'=>$name]);
+            $photo = Photo::create(['file'=>$name]);
 
-        $input['photo_id'] = $photo->id;
+            $input['photo_id'] = $photo->id;
 
-    }
+        }
 
         Auth::user()->products()->whereId($id)->first()->update($input);
 

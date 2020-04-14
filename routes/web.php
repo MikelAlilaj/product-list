@@ -21,17 +21,7 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-/*Route::get('/product', function(){
 
-    $user=Auth::user();
-    if($user->isAdmin()){
-
-        echo "this user is admin";
-    }
-
-});*/
-
-/*Route::get('admin/products', 'AdminProductsController@create');*/
 
 Route::resource('admin/users', 'AdminUsersController');
 

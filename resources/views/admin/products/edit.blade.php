@@ -25,10 +25,11 @@
 
 
 
-    <div class="form-group">
-        {!! Form::label('photo_id', 'Foto:') !!}
-        {!! Form::file('photo_id', null,['class'=>'form-control'])!!}
-    </div>
+
+        <div class="form-group">
+            {!! Form::label('photo_id', 'Photo:') !!}
+            {!! Form::file('photo_id', null,['class'=>'form-control'])!!}
+        </div>
 
 
     <div class="form-group">
@@ -55,10 +56,12 @@
 
 
 
-    <div class="form-group">
-        {!! Form::submit('Update Post', ['class'=>'btn btn-primary'])!!}
-    </div>
-    {!! Form::close() !!}
+        <div class="form-group">
+
+            {!! Form::submit('Update Post', ['class'=>'btn btn-primary col-sm-6']) !!}
+        </div>
+
+        {!! Form::close() !!}
 
 
         {!! Form::open(['method'=>'DELETE', 'action'=> ['AdminProductsController@destroy', $product->id]]) !!}

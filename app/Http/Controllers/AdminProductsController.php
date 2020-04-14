@@ -111,17 +111,16 @@ class AdminProductsController extends Controller
     {
         //
 
+        $input = $request->all();
 
-        $input=$request->all();
-
-        if($file=$request->file('photo_id')){
+        if($file = $request->file('photo_id')){
 
 
         $name = time() . $file->getClientOriginalName();
 
         $file->move('images', $name);
 
-        $photo = Photo::create(['file' => $name]);
+        $photo = Photo::create(['file'=>$name]);
 
         $input['photo_id'] = $photo->id;
 
@@ -143,9 +142,10 @@ class AdminProductsController extends Controller
         //
         $product=product::findOrFail($id);
 
-        unlink(public_path() . $product->photo->file);
+        unlink(public_path() .  $product->photo->file);
 
         $product->delete();
+
 
         return redirect('/admin/products');
     }

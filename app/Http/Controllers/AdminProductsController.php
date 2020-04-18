@@ -49,22 +49,21 @@ class AdminProductsController extends Controller
      */
     public function store(ProductsCreateRequest $request)
     {
-        //
         $input=$request->all();
         $user=Auth::user();
-
-
+        $product = $user->Products()->create($input);
 
         if($file=$request->file('photo_id')){
-
-
-            $name = time() . $file->getClientOriginalName();
-            $file->move('images', $name);
-            $photo = Photo::create(['file' => $name]);
-            $input['photo_id'] = $photo->id;
+            foreach ($request->photo_id as $key => $image) {
+                $name = time() . $image->getClientOriginalName();
+                $image->move('images', $name);
+                $photo = Photo::create([
+                    'product_id' => $product->id,
+                    'file'       => $name
+                ]);
+            }
         }
 
-        $user->Products()->create($input);
         return redirect('/admin/products');
     }
 
@@ -116,20 +115,24 @@ class AdminProductsController extends Controller
 
         $input = $request->all();
 
+        $product = Product::find($id);
+
         if($file = $request->file('photo_id')){
 
+            $product->photos()->delete();
 
-            $name = time() . $file->getClientOriginalName();
-
-            $file->move('images', $name);
-
-            $photo = Photo::create(['file'=>$name]);
-
-            $input['photo_id'] = $photo->id;
+            foreach ($request->photo_id as $key => $image) {
+                $name = time() . $image->getClientOriginalName();
+                $image->move('images', $name);
+                $photo = Photo::create([
+                    'product_id' => $product->id,
+                    'file'       => $name
+                ]);
+            }
 
         }
 
-        Auth::user()->products()->whereId($id)->first()->update($input);
+        $product->update($input);
 
         return redirect('/admin/products');
     }
@@ -142,14 +145,13 @@ class AdminProductsController extends Controller
      */
     public function destroy($id)
     {
-        //
         $product=product::findOrFail($id);
 
-        unlink(public_path() .  $product->photo->file);
+        foreach ($product->photos as $key => $photo) {
+            unlink(public_path() .  $photo->file);
+        }
 
         $product->delete();
-
-
         return redirect('/admin/products');
     }
 }

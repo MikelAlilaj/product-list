@@ -9,7 +9,6 @@ class Product extends Model
     //
     protected $fillable = [
         'user_id',
-        'photo_id',
         'title',
         'body',
         'sasi_gjendje',
@@ -21,7 +20,7 @@ class Product extends Model
         return $this->belongsTo('App\User');
     }
 
-    public function photo(){
-        return $this->belongsTo('App\Photo');
+    public function photos(){
+        return $this->hasMany(Photo::class);
     }
 }

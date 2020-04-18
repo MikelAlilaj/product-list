@@ -6,13 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Photo extends Model
 {
-    //
 
     protected $uploads = '/images/';
 
 
 
-    protected $fillable = ['file'];
+    protected $fillable = ['product_id' , 'file'];
 
 
 

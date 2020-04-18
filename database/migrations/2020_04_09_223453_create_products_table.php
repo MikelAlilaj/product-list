@@ -11,29 +11,28 @@ class CreateProductsTable extends Migration
      *
      * @return void
      */
-public function up()
-{
-    Schema::create('products', function (Blueprint $table) {
-        $table->bigIncrements('id')->unsigned();
-        $table->integer('user_id')->unsigned();
-        $table->integer('photo_id')->unsigned()->index();
-        $table->string('title');
-        $table->text('body');
-        $table->text('sasi_gjendje');
-        $table->text('sasi_peshe');
-        $table->timestamps();
+    public function up()
+    {
+        Schema::create('products', function (Blueprint $table) {
+            $table->bigIncrements('id')->unsigned();
+            $table->integer('user_id')->unsigned();
+            $table->string('title');
+            $table->text('body');
+            $table->text('sasi_gjendje');
+            $table->text('sasi_peshe');
+            $table->timestamps();
 
 
-    });
-}
+        });
+    }
 
-/**
- * Reverse the migrations.
- *
- * @return void
- */
-public function down()
-{
-    Schema::dropIfExists('products');
-}
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('products');
+    }
 }

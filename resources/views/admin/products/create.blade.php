@@ -10,8 +10,8 @@
 
 
     <div class="form-group">
-        {!! Form::label('photo_id', 'Foto:') !!}
-        {!! Form::file('photo_id', null,['class'=>'form-control'])!!}
+    {!! Form::label('photo_id', 'Foto:') !!}
+        <input type="file" name="photo_id[]" class="form-control" multiple="true">
     </div>
 
 

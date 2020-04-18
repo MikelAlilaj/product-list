@@ -18,7 +18,12 @@
         @foreach($products as $product)
 
             <tr>
-                <td><img height="50" src="{{$product->photo ? $product->photo->file : 'http://placehold.it/400x400' }} " alt=""></td>
+                <td>
+                    @foreach($product->photos as $photo)
+                        <img height="50" src="{{$photo->file ? $photo->file : 'http://placehold.it/400x400' }} " alt="">
+                    @endforeach
+
+                </td>
                 <td><a href="{{route('products.edit', $product->id)}}">{{$product->title}}</a></td>
                 <td>{{$product->body}}</td>
                 <td>{{$product->sasi_gjendje}}</td>
@@ -48,6 +53,9 @@
 
     </tbody>
 </table>
+
+
+
 
 
 

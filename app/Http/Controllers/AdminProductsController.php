@@ -7,6 +7,8 @@ use App\Photo;
 use App\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use App\User;
 
 class AdminProductsController extends Controller
 {
@@ -20,8 +22,8 @@ class AdminProductsController extends Controller
     public function index()
     {
         //
-        $products=Product::all();
-        return view('admin.products.index',compact('products'));
+        $products = Product::all();
+        return view('admin.products.index', compact('products'));
     }
 
     /**
@@ -32,8 +34,8 @@ class AdminProductsController extends Controller
     public function create()
     {
         //
-        $user=Auth::user();
-        if($user->isAdmin()) {
+        $user = Auth::user();
+        if ($user->isAdmin()) {
 
             return view('admin.products.create');
         }
@@ -44,22 +46,22 @@ class AdminProductsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(ProductsCreateRequest $request)
     {
-        $input=$request->all();
-        $user=Auth::user();
+        $input = $request->all();
+        $user = Auth::user();
         $product = $user->Products()->create($input);
 
-        if($file=$request->file('photo_id')){
+        if ($file = $request->file('photo_id')) {
             foreach ($request->photo_id as $key => $image) {
                 $name = time() . $image->getClientOriginalName();
                 $image->move('images', $name);
                 $photo = Photo::create([
                     'product_id' => $product->id,
-                    'file'       => $name
+                    'file' => $name
                 ]);
             }
         }
@@ -68,12 +70,10 @@ class AdminProductsController extends Controller
     }
 
 
-
-
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -84,14 +84,14 @@ class AdminProductsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
         //
-        $user=Auth::user();
-        if($user->isAdmin()) {
+        $user = Auth::user();
+        if ($user->isAdmin()) {
 
 
             $product = Product::findOrFail($id);
@@ -105,8 +105,8 @@ class AdminProductsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -117,7 +117,7 @@ class AdminProductsController extends Controller
 
         $product = Product::find($id);
 
-        if($file = $request->file('photo_id')){
+        if ($file = $request->file('photo_id')) {
 
             $product->photos()->delete();
 
@@ -126,7 +126,7 @@ class AdminProductsController extends Controller
                 $image->move('images', $name);
                 $photo = Photo::create([
                     'product_id' => $product->id,
-                    'file'       => $name
+                    'file' => $name
                 ]);
             }
 
@@ -140,18 +140,54 @@ class AdminProductsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        $product=product::findOrFail($id);
+        $product = product::findOrFail($id);
 
         foreach ($product->photos as $key => $photo) {
-            unlink(public_path() .  $photo->file);
+            unlink(public_path() . $photo->file);
         }
 
         $product->delete();
         return redirect('/admin/products');
+    }
+
+    public function OnCash(Request $request)
+    {
+
+        $products = Product::all();
+        $data = array();
+        $data['user_id'] = Auth::id();
+
+        foreach ($products as $row) {
+            $data['title'] = $row->title;
+        }
+        $order_id = DB::table('orders')->insertGetId($data);
+
+        return Redirect()->back();
+    }
+
+
+    public function ViewOrder(){
+
+        $order = DB::table('orders')
+            ->join('users','orders.user_id','users.id')
+            ->select('orders.*','users.name','users.email')
+            ->get();
+//        dd($order);
+
+        return view('admin.order.view_order',compact('order'));
+    }
+
+    public function UsersFrequented(){
+
+        $users = User::whereHas("orders")->withCount(['orders'])->orderBy('orders_count', 'DESC')->get();
+
+
+
+      return view('admin.order.users_frequented',compact('users'));
     }
 }

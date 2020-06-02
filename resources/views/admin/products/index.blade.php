@@ -9,6 +9,7 @@
         <th>Pershkrim</th>
         <th>Sasia ne gjendje</th>
         <th>Sasia ne peshe</th>
+        <th>Bli</th>
     </tr>
     </thead>
     <tbody>
@@ -29,11 +30,20 @@
                 <td>{{$product->sasi_gjendje}}</td>
                 <td>{{$product->sasi_peshe}}</td>
 
-            </tr>
+                <td>  <form action="{{ route('oncash.charge') }}" method="post" id="payment-form">
+                    @csrf
 
+                    <button class="btn btn-info">Pay Now</button>
+                </form>
+                </td>
         @endforeach
 
     @endif
+
+
+
+
+
 
     <div class="dropdown-menu dropdown-menu-left" aria-labelledby="navbarDropdown">
         {{ Auth::user()->name }} <span class="caret"></span>
@@ -48,8 +58,14 @@
         </form>
     </div>
     <li>
-        <a href="{{route('products.create')}}">Krijo produkt</a>
+        <a href="{{route('products.create')}}">Create Product</a>
+
     </li>
+                <li>
+                    <a href="{{route('admin.view.orders') }}">View Sales</a>
+                </li>
+
+
 
     </tbody>
 </table>
